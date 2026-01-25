@@ -1,103 +1,174 @@
 import streamlit as st
 import pandas as pd
-import pickle
+import joblib
 import numpy as np
+
 from sklearn.metrics import (
-    confusion_matrix,
-    classification_report,
     accuracy_score,
     precision_score,
     recall_score,
     f1_score,
-    matthews_corrcoef
+    matthews_corrcoef,
+    confusion_matrix,
+    classification_report
 )
 
 from model import SmokerPrediction
 
-st.set_page_config(page_title="Smoking Prediction", layout="wide")
-st.title("Smoking Prediction – Model Evaluation App")
+# --------------------------------------------------
+# Page config
+# --------------------------------------------------
+st.set_page_config(
+    page_title="Smoking Prediction App",
+    layout="wide"
+)
 
-# ---------------------------
+st.title("Smoking Prediction – Model Evaluation Dashboard")
+
+st.markdown(
+    """
+    This app allows evaluation of trained machine learning models on an uploaded
+    **test dataset**. Predictions are generated using the same preprocessing,
+    feature engineering, and probability thresholding as used during training.
+    """
+)
+
+# --------------------------------------------------
 # Model registry
-# ---------------------------
+# --------------------------------------------------
 MODEL_REGISTRY = {
-    "XGBoost": {
-        "artifact": "smoker_model_xgb.pkl",
+    "Random Forest": {
+        "artifact_path": "models/smoker_model_rf.pkl",
         "feature_fn": "create_features"
     },
-    "Random Forest": {
-        "artifact": "smoker_model_rf.pkl",
+    "XGBoost": {
+        "artifact_path": "models/smoker_model_xgb.pkl",
         "feature_fn": "create_features"
     },
     "Logistic Regression": {
-        "artifact": "smoker_model_lr.pkl",
+        "artifact_path": "models/smoker_model_lr.pkl",
         "feature_fn": "create_basic_features"
     },
     "Decision Tree": {
-        "artifact": "smoker_model_dt.pkl",
+        "artifact_path": "models/smoker_model_dt.pkl",
         "feature_fn": "decision_features"
     },
     "Naive Bayes": {
-        "artifact": "smoker_model_nb.pkl",
+        "artifact_path": "models/smoker_model_nb.pkl",
         "feature_fn": "create_basic_features"
     },
     "KNN": {
-        "artifact": "smoker_model_knn.pkl",
+        "artifact_path": "models/smoker_model_knn.pkl",
         "feature_fn": "load_and_preprocess"
     }
 }
 
-# ---------------------------
-# Upload test data
-# ---------------------------
-uploaded_file = st.file_uploader("Upload test dataset (CSV)", type=["csv"])
+# --------------------------------------------------
+# Dataset upload
+# --------------------------------------------------
+uploaded_file = st.file_uploader(
+    "Upload TEST dataset (CSV only)",
+    type=["csv"]
+)
 
-if uploaded_file:
-    test_df = pd.read_csv(uploaded_file)
-    st.success("Dataset uploaded successfully")
+if uploaded_file is None:
+    st.info("Please upload a CSV file containing test data.")
+    st.stop()
 
-    model_name = st.selectbox("Select Model", MODEL_REGISTRY.keys())
+# Load dataset
+test_df = pd.read_csv(uploaded_file)
+st.success("Test dataset uploaded successfully")
 
-    if st.button("Run Evaluation"):
-        config = MODEL_REGISTRY[model_name]
+# --------------------------------------------------
+# Model selection
+# --------------------------------------------------
+model_name = st.selectbox(
+    "Select a trained model",
+    options=list(MODEL_REGISTRY.keys())
+)
 
-        # Load artifact
-        with open(config["artifact"], "rb") as f:
-            artifact = pickle.load(f)
+if st.button("Run Evaluation"):
 
-        model = artifact["model"]
-        threshold = artifact.get("threshold", 0.5)
+    config = MODEL_REGISTRY[model_name]
 
-        # Feature engineering
-        sp = SmokerPrediction(test_df, drop=False)
-        df_feat = getattr(sp, config["feature_fn"])()
+    # --------------------------------------------------
+    # Load artifact
+    # --------------------------------------------------
+    artifact = joblib.load(config["artifact_path"])
 
-        # Split X / y
-        y_true = df_feat["smoking"]
-        X = df_feat.drop("smoking", axis=1)
+    model = artifact["model"]
+    feature_list = artifact["features"]
+    threshold = artifact.get("threshold", 0.5)
 
-        # Align columns (VERY IMPORTANT)
-        required_cols = artifact.get("features") or artifact.get("columns")
-        X = X[required_cols]
+    # --------------------------------------------------
+    # Feature engineering
+    # --------------------------------------------------
+    sp = SmokerPrediction(test_df, drop=False)
 
-        # Prediction + thresholding
-        y_proba = model.predict_proba(X)[:, 1]
-        y_pred = (y_proba >= threshold).astype(int)
+    feature_method = getattr(sp, config["feature_fn"])
+    processed_df = feature_method()
 
-        # Metrics
-        col1, col2 = st.columns(2)
+    # --------------------------------------------------
+    # Split X / y
+    # --------------------------------------------------
+    if "smoking" not in processed_df.columns:
+        st.error("Target column 'smoking' not found after preprocessing.")
+        st.stop()
 
-        with col1:
-            st.subheader("Evaluation Metrics")
-            st.write(f"Accuracy: {accuracy_score(y_true, y_pred):.4f}")
-            st.write(f"Precision: {precision_score(y_true, y_pred):.4f}")
-            st.write(f"Recall: {recall_score(y_true, y_pred):.4f}")
-            st.write(f"F1 Score: {f1_score(y_true, y_pred):.4f}")
-            st.write(f"MCC: {matthews_corrcoef(y_true, y_pred):.4f}")
+    y_true = processed_df["smoking"].values
+    X = processed_df.drop(columns=["smoking"])
 
-        with col2:
-            st.subheader("Confusion Matrix")
-            st.write(confusion_matrix(y_true, y_pred))
+    # Align features EXACTLY as during training
+    X = X[feature_list]
 
-        st.subheader("Classification Report")
-        st.text(classification_report(y_true, y_pred))
+    # --------------------------------------------------
+    # Prediction + probability manipulation
+    # --------------------------------------------------
+    if hasattr(model, "predict_proba"):
+        y_prob = model.predict_proba(X)[:, 1]
+    else:
+        # Fallback (should rarely happen)
+        y_prob = model.predict(X)
+
+    y_pred = (y_prob >= threshold).astype(int)
+
+    # --------------------------------------------------
+    # Metrics
+    # --------------------------------------------------
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("Evaluation Metrics")
+        st.write(f"Accuracy: **{accuracy_score(y_true, y_pred):.4f}**")
+        st.write(f"Precision: **{precision_score(y_true, y_pred):.4f}**")
+        st.write(f"Recall: **{recall_score(y_true, y_pred):.4f}**")
+        st.write(f"F1 Score: **{f1_score(y_true, y_pred):.4f}**")
+        st.write(f"MCC: **{matthews_corrcoef(y_true, y_pred):.4f}**")
+
+    with col2:
+        st.subheader("Confusion Matrix")
+        cm = confusion_matrix(y_true, y_pred)
+        st.dataframe(
+            pd.DataFrame(
+                cm,
+                index=["Actual 0", "Actual 1"],
+                columns=["Predicted 0", "Predicted 1"]
+            )
+        )
+
+    # --------------------------------------------------
+    # Classification report
+    # --------------------------------------------------
+    st.subheader("Classification Report")
+    st.text(classification_report(y_true, y_pred))
+
+    # --------------------------------------------------
+    # Optional: probability inspection
+    # --------------------------------------------------
+    with st.expander("View prediction probabilities"):
+        prob_df = pd.DataFrame({
+            "Actual": y_true,
+            "Predicted": y_pred,
+            "Probability": y_prob
+        })
+        st.dataframe(prob_df.head(50))
