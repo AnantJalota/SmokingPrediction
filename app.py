@@ -5,6 +5,7 @@ import numpy as np
 
 from sklearn.metrics import (
     accuracy_score,
+    roc_auc_score,
     precision_score,
     recall_score,
     f1_score,
@@ -139,11 +140,12 @@ if st.button("Run Evaluation"):
 
     with col1:
         st.subheader("Evaluation Metrics")
-        st.write(f"Accuracy: **{accuracy_score(y_true, y_pred):.4f}**")
-        st.write(f"Precision: **{precision_score(y_true, y_pred):.4f}**")
-        st.write(f"Recall: **{recall_score(y_true, y_pred):.4f}**")
-        st.write(f"F1 Score: **{f1_score(y_true, y_pred):.4f}**")
-        st.write(f"MCC: **{matthews_corrcoef(y_true, y_pred):.4f}**")
+        st.write(f"Accuracy: **{accuracy_score(y_true, y_pred):.2f}**")
+        st.write(f"AUC: **{roc_auc_score(y_true, y_pred):.2f}**")
+        st.write(f"Precision: **{precision_score(y_true, y_pred):.2f}**")
+        st.write(f"Recall: **{recall_score(y_true, y_pred):.2f}**")
+        st.write(f"F1 Score: **{f1_score(y_true, y_pred):.2f}**")
+        st.write(f"MCC: **{matthews_corrcoef(y_true, y_pred):.2f}**")
 
     with col2:
         st.subheader("Confusion Matrix")
@@ -172,3 +174,4 @@ if st.button("Run Evaluation"):
             "Probability": y_prob
         })
         st.dataframe(prob_df.head(50))
+
