@@ -162,16 +162,4 @@ if st.button("Run Evaluation"):
     # Classification report
     # --------------------------------------------------
     st.subheader("Classification Report")
-    st.text(classification_report(y_true, y_pred))
-
-    # --------------------------------------------------
-    # Optional: probability inspection
-    # --------------------------------------------------
-    with st.expander("View prediction probabilities"):
-        prob_df = pd.DataFrame({
-            "Actual": y_true,
-            "Predicted": y_pred,
-            "Probability": y_prob
-        })
-        st.dataframe(prob_df.head(50))
-
+    st.text(pd.DataFrame(classification_report(y_true, y_pred, target_names=["Non Smoker", "Smoker"], output_dict=True)).T)
