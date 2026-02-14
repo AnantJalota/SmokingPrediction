@@ -154,20 +154,20 @@ if run_button:
     st.subheader("Confusion Matrix")
     cm = confusion_matrix(y_true, y_pred)
 
-    fig_cm, ax = plt.subplots(figsize=(4, 4))
+    fig_cm, ax = plt.subplots(figsize=(2, 2))
     
     im = ax.imshow(cm)
     
     # Smaller tick labels
     ax.set_xticks([0, 1])
-    ax.set_xticklabels(["Non Smoker", "Smoker"], fontsize=8)
+    ax.set_xticklabels(["Non Smoker", "Smoker"], fontsize=4)
     
     ax.set_yticks([0, 1])
-    ax.set_yticklabels(["Non Smoker", "Smoker"], fontsize=8)
+    ax.set_yticklabels(["Non Smoker", "Smoker"], fontsize=4)
     
     # Smaller axis labels
-    ax.set_xlabel("Predicted", fontsize=9)
-    ax.set_ylabel("Actual", fontsize=9)
+    ax.set_xlabel("Predicted", fontsize=6)
+    ax.set_ylabel("Actual", fontsize=6)
     
     # Smaller title
     ax.set_title("Confusion Matrix", fontsize=12)
@@ -194,4 +194,5 @@ if run_button:
             )
         ).T
         st.dataframe(report_df.style.format("{:.3f}"))
+
 
