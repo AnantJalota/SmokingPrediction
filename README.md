@@ -1,6 +1,6 @@
 ## Problem Statement
 
-The objective of this project is to build a binary classification system to predict whether an individual is a smoker or a non-smoker using physiological and biological signal data. The target variable is smoking status, and the task involves learning complex, non-linear relationships between health indicators and smoking behavior.
+The objective of this project is to build a binary classification system to predict whether an individual is a smoker or a non-smoker using physiological and biological signal data. The target variable is smoking status, and the task involves learning complex, non-linear relationships between health indicators and smoking behavior. The dataset is based on vital information and its connection to smoking, and since the vitals can be deviated from normal range due to behaviour which can be other than smoking, our aim is to correctly identify how combinations vitals shifts links with smoking behaviour. In this problem, if we are to compare the model performance we would go with the f1_score as the dataset is imbalanced and this would give a mix of both recall and precision. 
 
 ## Dataset Description
 
@@ -43,7 +43,7 @@ The dataset does not contain missing values. Preprocessing steps include outlier
 
 ## Observations
 
-Below are the Model performance observations, where I have also added what was done and how has that impacted the metric collected and added above.
+Since, we are dealing with a problem where human physiological and behavioural aspects are dominant and with various reasons which can cause them, linking them with smoking was tedious because of the complexity. Below are the Model performance observations, where I have also added what was done and how has that impacted the metric collected and added above.
 
 | **ML Model Name**        | **Observation about model performance**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 |--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
