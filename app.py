@@ -155,7 +155,7 @@ if run_button:
     st.subheader("Confusion Matrix")
     cm = confusion_matrix(y_true, y_pred)
 
-    fig_cm = plt.figure()
+    fig_cm = plt.figure(figsize=(20,10)
     plt.imshow(cm)
     plt.xticks([0, 1], ["Non Smoker", "Smoker"])
     plt.yticks([0, 1], ["Non Smoker", "Smoker"])
@@ -169,20 +169,7 @@ if run_button:
 
     st.pyplot(fig_cm)
 
-    # ROC Curve (Matplotlib only)
-    st.subheader("ROC Curve")
-    fpr, tpr, _ = roc_curve(y_true, y_prob)
-
-    fig_roc = plt.figure()
-    plt.plot(fpr, tpr)
-    plt.plot([0, 1], [0, 1])
-    plt.xlabel("False Positive Rate")
-    plt.ylabel("True Positive Rate")
-    plt.title("ROC Curve")
-
-    st.pyplot(fig_roc)
-
-    # Classification Report
+   # Classification Report
     with st.expander("Detailed Classification Report"):
         report_df = pd.DataFrame(
             classification_report(
@@ -193,3 +180,4 @@ if run_button:
             )
         ).T
         st.dataframe(report_df.style.format("{:.3f}"))
+
