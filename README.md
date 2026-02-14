@@ -34,12 +34,12 @@ The dataset does not contain missing values. Preprocessing steps include outlier
 
 | **ML Model Name**        | **Accuracy** | **AUC** | **Precision** | **Recall** | **F1** | **MCC** |
 |--------------------------|--------------|---------|---------------|------------|--------|---------|
-| Logistic Regression      | 0.75         | 0.73    | 0.65          | 0.69       | 0.67   | 0.46    |
-| Decision Tree            | 0.74         | 0.76    | 0.60          | 0.85       | 0.71   | 0.50    |
-| KNN                      | 0.72         | 0.76    | 0.57          | 0.92       | 0.71   | 0.51    |
-| Naive Bayes              | 0.71         | 0.76    | 0.57          | 0.93       | 0.70   | 0.51    |
-| Random Forest (Ensemble) | 0.78         | 0.77    | 0.70          | 0.73       | 0.71   | 0.54    |
-| XGBoost (Ensemble)       | 0.79         | 0.78    | 0.71          | 0.74       | 0.73   | 0.56    |
+| Logistic Regression      | 0.75         | 0.83    | 0.65          | 0.69       | 0.67   | 0.46    |
+| Decision Tree            | 0.74         | 0.83    | 0.60          | 0.85       | 0.71   | 0.50    |
+| KNN                      | 0.72         | 0.83    | 0.57          | 0.92       | 0.71   | 0.51    |
+| Naive Bayes              | 0.71         | 0.81    | 0.57          | 0.93       | 0.70   | 0.51    |
+| Random Forest (Ensemble) | 0.78         | 0.86    | 0.70          | 0.73       | 0.71   | 0.54    |
+| XGBoost (Ensemble)       | 0.79         | 0.88    | 0.71          | 0.74       | 0.73   | 0.56    |
 
 ## Observations
 
