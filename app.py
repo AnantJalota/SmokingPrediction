@@ -182,7 +182,7 @@ if run_button:
                 j, i, cm[i, j],
                 ha="center",
                 va="center",
-                fontsize=9,
+                fontsize=5,
                 fontweight="normal"
             )
     
@@ -206,5 +206,6 @@ if run_button:
     ).T
     
     st.dataframe(report_df.round(3), use_container_width=True)
+
 
 
