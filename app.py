@@ -43,17 +43,16 @@ def fetch_github_csv(url):
 
 st.sidebar.header("Dataset Options")
 
-if st.sidebar.button("Download Test Dataset from GitHub"):
-    try:
-        csv_data = fetch_github_csv(GITHUB_RAW_URL)
-        st.sidebar.download_button(
-            label="Click to Download CSV",
-            data=csv_data,
-            file_name="Smoking_test.csv",
-            mime="text/csv"
-        )
-    except Exception as e:
-        st.sidebar.error(f"Error fetching file: {e}")
+try:
+    csv_data = fetch_github_csv(GITHUB_RAW_URL)
+    st.sidebar.download_button(
+        label="Click to Download CSV",
+        data=csv_data,
+        file_name="Smoking_test.csv",
+        mime="text/csv"
+    )
+except Exception as e:
+    st.sidebar.error(f"Error fetching file: {e}")
 
 uploaded_file = st.sidebar.file_uploader(
     "Upload TEST dataset (CSV only)",
@@ -155,20 +154,20 @@ if run_button:
     st.subheader("Confusion Matrix")
     cm = confusion_matrix(y_true, y_pred)
 
-    fig_cm = plt.figure(figsize=(10,6))
+    fig_cm = plt.figure(figsize=(4, 4))  # smaller square
     plt.imshow(cm)
     plt.xticks([0, 1], ["Non Smoker", "Smoker"])
     plt.yticks([0, 1], ["Non Smoker", "Smoker"])
     plt.xlabel("Predicted")
     plt.ylabel("Actual")
     plt.title("Confusion Matrix")
-
+    
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):
             plt.text(j, i, cm[i, j], ha="center", va="center")
-
+    
     st.pyplot(fig_cm)
-
+    
    # Classification Report
     with st.expander("Detailed Classification Report"):
         report_df = pd.DataFrame(
@@ -180,6 +179,7 @@ if run_button:
             )
         ).T
         st.dataframe(report_df.style.format("{:.3f}"))
+
 
 
 
