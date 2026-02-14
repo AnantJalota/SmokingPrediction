@@ -194,20 +194,15 @@ if run_button:
     st.pyplot(fig_cm, use_container_width=False)
    
    # Classification Report
-    with st.expander("Detailed Classification Report"):
-        report_df = pd.DataFrame(
-            classification_report(
-                y_true,
-                y_pred,
-                target_names=["Non Smoker", "Smoker"],
-                output_dict=True
-            )
-        ).T
-        st.dataframe(report_df.style.format("{:.3f}"))
-
-
-
-
-
-
-
+    st.subheader("Classification Report")
+    
+    report_df = pd.DataFrame(
+        classification_report(
+            y_true,
+            y_pred,
+            target_names=["Non Smoker", "Smoker"],
+            output_dict=True
+        )
+    ).T
+    
+    st.dataframe(report_df.round(3), use_container_width=False)
