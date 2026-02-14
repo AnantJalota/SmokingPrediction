@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 import numpy as np
+import requests
 
 from sklearn.metrics import (
     accuracy_score,
@@ -182,4 +183,5 @@ if st.button("Run Evaluation"):
     # --------------------------------------------------
     st.subheader("Classification Report")
     st.text(pd.DataFrame(classification_report(y_true, y_pred, target_names=["Non Smoker", "Smoker"], output_dict=True)).T)
+
 
