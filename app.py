@@ -157,8 +157,8 @@ if run_button:
     st.subheader("Confusion Matrix")
     cm = confusion_matrix(y_true, y_pred)
 
-    fig_cm, ax = plt.subplots(figsize=(3.5, 3.5), dpi=120)
-    
+    fig_cm, ax = plt.subplots(figsize=(2.5, 2.5), dpi=150)
+
     im = ax.imshow(cm)
     
     # Smaller, softer tick labels
@@ -191,10 +191,8 @@ if run_button:
         spine.set_visible(False)
     
     plt.tight_layout()
-    st.pyplot(fig_cm)
-
-
-    
+    st.pyplot(fig_cm, use_container_width=False)
+   
    # Classification Report
     with st.expander("Detailed Classification Report"):
         report_df = pd.DataFrame(
@@ -206,6 +204,7 @@ if run_button:
             )
         ).T
         st.dataframe(report_df.style.format("{:.3f}"))
+
 
 
 
