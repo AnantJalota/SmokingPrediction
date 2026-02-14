@@ -64,6 +64,25 @@ MODEL_REGISTRY = {
     }
 }
 
+GITHUB_RAW_URL = "https://raw.githubusercontent.com/AnantJalota/SmokingPrediction/main/Smoking_test.csv"
+
+st.title("Download Dataset")
+
+try:
+    response = requests.get(GITHUB_RAW_URL)
+    response.raise_for_status()
+
+    st.download_button(
+        label="Download CSV from GitHub",
+        data=response.content,
+        file_name="dataset.csv",
+        mime="text/csv"
+    )
+
+except Exception as e:
+    st.error(f"Error fetching file: {e}")
+
+
 # --------------------------------------------------
 # Dataset upload
 # --------------------------------------------------
@@ -163,3 +182,4 @@ if st.button("Run Evaluation"):
     # --------------------------------------------------
     st.subheader("Classification Report")
     st.text(pd.DataFrame(classification_report(y_true, y_pred, target_names=["Non Smoker", "Smoker"], output_dict=True)).T)
+
