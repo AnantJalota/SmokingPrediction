@@ -205,5 +205,6 @@ if run_button:
         )
     ).T
     
-    st.dataframe(report_df.round(3), use_container_width=False)
+    st.dataframe(report_df.round(3), use_container_width=True)
+
 
