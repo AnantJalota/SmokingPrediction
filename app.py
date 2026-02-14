@@ -157,7 +157,7 @@ if run_button:
     st.subheader("Confusion Matrix")
     cm = confusion_matrix(y_true, y_pred)
 
-    fig_cm, ax = plt.subplots(figsize=(4, 2.5), dpi=150)
+    fig_cm, ax = plt.subplots(figsize=(5, 3), dpi=150)
 
     im = ax.imshow(cm)
     
@@ -205,7 +205,8 @@ if run_button:
         )
     ).T
     
-    st.dataframe(report_df.round(3), use_container_width=True)
+    st.dataframe(report_df.round(2), use_container_width=True)
+
 
 
 
