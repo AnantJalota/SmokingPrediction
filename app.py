@@ -17,7 +17,10 @@ from sklearn.metrics import (
 )
 
 from model import SmokerPrediction
-
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.weight": "normal"
+})
 # --------------------------------------------------
 # Page config
 # --------------------------------------------------
@@ -203,6 +206,7 @@ if run_button:
             )
         ).T
         st.dataframe(report_df.style.format("{:.3f}"))
+
 
 
 
