@@ -155,7 +155,7 @@ if run_button:
     st.subheader("Confusion Matrix")
     cm = confusion_matrix(y_true, y_pred)
 
-    fig_cm = plt.figure(figsize=(20,10))
+    fig_cm = plt.figure(figsize=(10,6))
     plt.imshow(cm)
     plt.xticks([0, 1], ["Non Smoker", "Smoker"])
     plt.yticks([0, 1], ["Non Smoker", "Smoker"])
@@ -180,5 +180,6 @@ if run_button:
             )
         ).T
         st.dataframe(report_df.style.format("{:.3f}"))
+
 
 
