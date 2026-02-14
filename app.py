@@ -163,17 +163,17 @@ if run_button:
     
     # Smaller, softer tick labels
     ax.set_xticks([0, 1])
-    ax.set_xticklabels(["Non Smoker", "Smoker"], fontsize=8)
+    ax.set_xticklabels(["Non Smoker", "Smoker"], fontsize=4)
     
     ax.set_yticks([0, 1])
-    ax.set_yticklabels(["Non Smoker", "Smoker"], fontsize=8)
+    ax.set_yticklabels(["Non Smoker", "Smoker"], fontsize=4)
     
     # Softer axis labels
-    ax.set_xlabel("Predicted", fontsize=9)
-    ax.set_ylabel("Actual", fontsize=9)
+    ax.set_xlabel("Predicted", fontsize=5)
+    ax.set_ylabel("Actual", fontsize=5)
     
     # Subtle title
-    ax.set_title("Confusion Matrix", fontsize=10)
+    ax.set_title("Confusion Matrix", fontsize=7.5)
     
     # Smaller, non-bold cell values
     for i in range(cm.shape[0]):
@@ -204,6 +204,7 @@ if run_button:
             )
         ).T
         st.dataframe(report_df.style.format("{:.3f}"))
+
 
 
 
