@@ -154,19 +154,34 @@ if run_button:
     st.subheader("Confusion Matrix")
     cm = confusion_matrix(y_true, y_pred)
 
-    fig_cm = plt.figure(figsize=(1,1)) 
-    plt.imshow(cm)
-    plt.xticks([0, 1], ["Non Smoker", "Smoker"])
-    plt.yticks([0, 1], ["Non Smoker", "Smoker"])
-    plt.xlabel("Predicted")
-    plt.ylabel("Actual")
-    plt.title("Confusion Matrix")
-    
-    for i in range(cm.shape[0]):
-        for j in range(cm.shape[1]):
-            plt.text(j, i, cm[i, j], ha="center", va="center")
-    
-    st.pyplot(fig_cm)
+fig_cm, ax = plt.subplots(figsize=(4, 4))
+
+im = ax.imshow(cm)
+
+# Smaller tick labels
+ax.set_xticks([0, 1])
+ax.set_xticklabels(["Non Smoker", "Smoker"], fontsize=8)
+
+ax.set_yticks([0, 1])
+ax.set_yticklabels(["Non Smoker", "Smoker"], fontsize=8)
+
+# Smaller axis labels
+ax.set_xlabel("Predicted", fontsize=9)
+ax.set_ylabel("Actual", fontsize=9)
+
+# Smaller title
+ax.set_title("Confusion Matrix", fontsize=12)
+
+# Smaller cell text
+for i in range(cm.shape[0]):
+    for j in range(cm.shape[1]):
+        ax.text(j, i, cm[i, j],
+                ha="center",
+                va="center",
+                fontsize=11)
+
+st.pyplot(fig_cm)
+
     
    # Classification Report
     with st.expander("Detailed Classification Report"):
@@ -179,8 +194,3 @@ if run_button:
             )
         ).T
         st.dataframe(report_df.style.format("{:.3f}"))
-
-
-
-
-
