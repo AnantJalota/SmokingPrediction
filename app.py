@@ -76,7 +76,7 @@ try:
     st.download_button(
         label="Download CSV from GitHub",
         data=response.content,
-        file_name="dataset.csv",
+        file_name="Smoking_Prediction.csv",
         mime="text/csv"
     )
 
@@ -183,5 +183,6 @@ if st.button("Run Evaluation"):
     # --------------------------------------------------
     st.subheader("Classification Report")
     st.text(pd.DataFrame(classification_report(y_true, y_pred, target_names=["Non Smoker", "Smoker"], output_dict=True)).T)
+
 
 
