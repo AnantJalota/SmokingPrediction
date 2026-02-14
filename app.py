@@ -1,11 +1,8 @@
-
 import streamlit as st
 import pandas as pd
 import joblib
-import numpy as np
 import requests
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 from sklearn.metrics import (
     accuracy_score,
@@ -31,8 +28,36 @@ st.set_page_config(
 )
 
 st.title("Smoking Prediction – Model Evaluation Dashboard")
-st.markdown(
-    "Evaluate trained machine learning models on unseen test data."
+st.markdown("Evaluate trained machine learning models on unseen test data.")
+
+# --------------------------------------------------
+# GitHub dataset download
+# --------------------------------------------------
+GITHUB_RAW_URL = "https://raw.githubusercontent.com/AnantJalota/SmokingPrediction/main/Smoking_test.csv"
+
+@st.cache_data
+def fetch_github_csv(url):
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.content
+
+st.sidebar.header("Dataset Options")
+
+if st.sidebar.button("Download Test Dataset from GitHub"):
+    try:
+        csv_data = fetch_github_csv(GITHUB_RAW_URL)
+        st.sidebar.download_button(
+            label="Click to Download CSV",
+            data=csv_data,
+            file_name="Smoking_test.csv",
+            mime="text/csv"
+        )
+    except Exception as e:
+        st.sidebar.error(f"Error fetching file: {e}")
+
+uploaded_file = st.sidebar.file_uploader(
+    "Upload TEST dataset (CSV only)",
+    type=["csv"]
 )
 
 # --------------------------------------------------
@@ -64,16 +89,6 @@ MODEL_REGISTRY = {
         "feature_fn": "load_and_preprocess"
     }
 }
-
-# --------------------------------------------------
-# Sidebar Controls
-# --------------------------------------------------
-st.sidebar.header("Configuration")
-
-uploaded_file = st.sidebar.file_uploader(
-    "Upload TEST dataset (CSV only)",
-    type=["csv"]
-)
 
 model_name = st.sidebar.selectbox(
     "Select trained model",
@@ -136,34 +151,35 @@ if run_button:
     m5.metric("F1 Score", f"{f1:.3f}")
     m6.metric("MCC", f"{mcc:.3f}")
 
-    # Confusion Matrix
+    # Confusion Matrix (Matplotlib only)
     st.subheader("Confusion Matrix")
     cm = confusion_matrix(y_true, y_pred)
 
-    fig_cm, ax = plt.subplots()
-    sns.heatmap(
-        cm,
-        annot=True,
-        fmt="d",
-        cmap="Blues",
-        xticklabels=["Non Smoker", "Smoker"],
-        yticklabels=["Non Smoker", "Smoker"],
-        ax=ax
-    )
-    ax.set_xlabel("Predicted")
-    ax.set_ylabel("Actual")
+    fig_cm = plt.figure()
+    plt.imshow(cm)
+    plt.xticks([0, 1], ["Non Smoker", "Smoker"])
+    plt.yticks([0, 1], ["Non Smoker", "Smoker"])
+    plt.xlabel("Predicted")
+    plt.ylabel("Actual")
+    plt.title("Confusion Matrix")
+
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            plt.text(j, i, cm[i, j], ha="center", va="center")
+
     st.pyplot(fig_cm)
 
-    # ROC Curve
+    # ROC Curve (Matplotlib only)
     st.subheader("ROC Curve")
     fpr, tpr, _ = roc_curve(y_true, y_prob)
 
-    fig_roc, ax = plt.subplots()
-    ax.plot(fpr, tpr)
-    ax.plot([0, 1], [0, 1], linestyle="--")
-    ax.set_xlabel("False Positive Rate")
-    ax.set_ylabel("True Positive Rate")
-    ax.set_title("ROC Curve")
+    fig_roc = plt.figure()
+    plt.plot(fpr, tpr)
+    plt.plot([0, 1], [0, 1])
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title("ROC Curve")
+
     st.pyplot(fig_roc)
 
     # Classification Report
