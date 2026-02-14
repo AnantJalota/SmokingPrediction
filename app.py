@@ -154,33 +154,42 @@ if run_button:
     st.subheader("Confusion Matrix")
     cm = confusion_matrix(y_true, y_pred)
 
-    fig_cm, ax = plt.subplots(figsize=(2, 2))
+    fig_cm, ax = plt.subplots(figsize=(3.5, 3.5), dpi=120)
     
     im = ax.imshow(cm)
     
-    # Smaller tick labels
+    # Smaller, softer tick labels
     ax.set_xticks([0, 1])
-    ax.set_xticklabels(["Non Smoker", "Smoker"], fontsize=4)
+    ax.set_xticklabels(["Non Smoker", "Smoker"], fontsize=8)
     
     ax.set_yticks([0, 1])
-    ax.set_yticklabels(["Non Smoker", "Smoker"], fontsize=4)
+    ax.set_yticklabels(["Non Smoker", "Smoker"], fontsize=8)
     
-    # Smaller axis labels
-    ax.set_xlabel("Predicted", fontsize=6)
-    ax.set_ylabel("Actual", fontsize=6)
+    # Softer axis labels
+    ax.set_xlabel("Predicted", fontsize=9)
+    ax.set_ylabel("Actual", fontsize=9)
     
-    # Smaller title
-    ax.set_title("Confusion Matrix", fontsize=12)
+    # Subtle title
+    ax.set_title("Confusion Matrix", fontsize=10)
     
-    # Smaller cell text
+    # Smaller, non-bold cell values
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):
-            ax.text(j, i, cm[i, j],
-                    ha="center",
-                    va="center",
-                    fontsize=11)
+            ax.text(
+                j, i, cm[i, j],
+                ha="center",
+                va="center",
+                fontsize=9,
+                fontweight="normal"
+            )
     
+    # Remove thick border effect
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+    
+    plt.tight_layout()
     st.pyplot(fig_cm)
+
 
     
    # Classification Report
@@ -194,5 +203,6 @@ if run_button:
             )
         ).T
         st.dataframe(report_df.style.format("{:.3f}"))
+
 
 
