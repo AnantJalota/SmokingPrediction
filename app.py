@@ -146,18 +146,18 @@ if run_button:
     st.header("Model Performance")
 
     m1, m2, m3, m4, m5, m6 = st.columns(6)
-    m1.metric("Accuracy", f"{accuracy:.3f}")
-    m2.metric("AUC", f"{auc:.3f}")
-    m3.metric("Precision", f"{precision:.3f}")
-    m4.metric("Recall", f"{recall:.3f}")
-    m5.metric("F1 Score", f"{f1:.3f}")
-    m6.metric("MCC", f"{mcc:.3f}")
+    m1.metric("Accuracy", f"{accuracy:.2f}")
+    m2.metric("AUC", f"{auc:.2f}")
+    m3.metric("Precision", f"{precision:.2f}")
+    m4.metric("Recall", f"{recall:.2f}")
+    m5.metric("F1 Score", f"{f1:.2f}")
+    m6.metric("MCC", f"{mcc:.2f}")
 
     # Confusion Matrix (Matplotlib only)
     st.subheader("Confusion Matrix")
     cm = confusion_matrix(y_true, y_pred)
 
-    fig_cm, ax = plt.subplots(figsize=(2.5, 2.5), dpi=150)
+    fig_cm, ax = plt.subplots(figsize=(4, 2.5), dpi=150)
 
     im = ax.imshow(cm)
     
@@ -206,3 +206,4 @@ if run_button:
     ).T
     
     st.dataframe(report_df.round(3), use_container_width=False)
+
